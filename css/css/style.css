@@ -1491,11 +1491,3 @@ span.error {
     height: 100%;
     border: 1px solid red;
     background: #000; }
-
-.skill-logo {
-  width: 40px;  /* Adjust the size as needed */
-  height: auto;
-  display: block;
-  margin: 0 auto 10px; /* Center the image */
-}
-    
