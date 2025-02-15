@@ -686,13 +686,10 @@ a {
 .portfolio-item {
   overflow: hidden; }
   .portfolio-item img {
-    -webkit-transition: .3s all ease;
-    -o-transition: .3s all ease;
-    transition: .3s all ease;
-    position: relative;
-    -webkit-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1); }
+    width: 100%; /* Ensures images stretch to fill their container */
+    height: 250px; /* Set a fixed height */
+    object-fit: cover; /* Crop images while maintaining aspect ratio */
+    border-radius: 10px; /* Optional: Smooth edges */}
   .portfolio-item:hover img {
     -webkit-transform: scale(1.09);
     -ms-transform: scale(1.09);
