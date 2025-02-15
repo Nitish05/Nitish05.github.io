@@ -683,8 +683,11 @@ a {
     -o-object-fit: cover;
     object-fit: cover; }
 
-.portfolio-item {
-  overflow: hidden; }
+.portfolio-item .portfolio-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 250px; /* Same as image height */}
   .portfolio-item img {
     width: 100%; /* Ensures images stretch to fill their container */
     height: 250px; /* Set a fixed height */
