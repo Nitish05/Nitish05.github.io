@@ -109,13 +109,29 @@ var siteIstotope = function() {
 
 }
 
+// var loader = function() {
+// 	setTimeout(function() {
+// 		TweenMax.to('.site-loader-wrap', 1, { marginTop: 50, autoAlpha: 0, ease: Power4.easeInOut });
+//   }, 10);
+//   $(".site-loader-wrap").delay(200).fadeOut("slow");
+// 	$("#unslate_co--overlayer").delay(200).fadeOut("slow");	
+// }
+
 var loader = function() {
-	setTimeout(function() {
-		TweenMax.to('.site-loader-wrap', 1, { marginTop: 50, autoAlpha: 0, ease: Power4.easeInOut });
-  }, 10);
-  $(".site-loader-wrap").delay(200).fadeOut("slow");
-	$("#unslate_co--overlayer").delay(200).fadeOut("slow");	
-}
+	$(window).on('load', function() {
+	  // Use GSAP to animate the loader fade out
+	  TweenMax.to('.site-loader-wrap', 1, { 
+		marginTop: 50, 
+		autoAlpha: 0, 
+		ease: Power4.easeInOut, 
+		onComplete: function() {
+		  // Hide both loader and overlay once the animation completes
+		  $('.site-loader-wrap, #unslate_co--overlayer').hide();
+		}
+	  });
+	});
+  };
+  
 
 var siteMenuClone = function() {
 

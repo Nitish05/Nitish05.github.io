@@ -136,6 +136,28 @@ a, a:hover {
   bottom: 0;
 }
 
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: 
+    radial-gradient(farthest-side, #f03355 95%, transparent) 50% 1px/12px 12px no-repeat,
+    radial-gradient(farthest-side, transparent calc(100% - 14px), #ccc 0);
+  animation: l9 2s infinite linear;
+  
+  /* Optional: Center the loader on the page */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+@keyframes l9 {
+  to { transform: rotate(1turn); }
+}
+
+
 .site-loader-wrap {
   z-index: 7700;
   position: fixed;
