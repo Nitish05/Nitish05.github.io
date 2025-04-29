@@ -8,7 +8,7 @@ AOS.init({
 jQuery(function($) {
 	
 	'use strict';
-	loader();
+	// loader();
 	siteMenuClone();
 	mobileToggleClick();
 	onePageNavigation();
@@ -117,20 +117,20 @@ var siteIstotope = function() {
 // 	$("#unslate_co--overlayer").delay(200).fadeOut("slow");	
 // }
 
-var loader = function() {
-	$(window).on('load', function() {
-	  // Use GSAP to animate the loader fade out
-	  TweenMax.to('.site-loader-wrap', 1, { 
-		marginTop: 50, 
-		autoAlpha: 0, 
-		ease: Power4.easeInOut, 
-		onComplete: function() {
-		  // Hide both loader and overlay once the animation completes
-		  $('.site-loader-wrap, #unslate_co--overlayer').hide();
-		}
-	  });
-	});
-  };
+// var loader = function() {
+// 	$(window).on('load', function() {
+// 	  // Use GSAP to animate the loader fade out
+// 	  TweenMax.to('.site-loader-wrap', 1, { 
+// 		marginTop: 50, 
+// 		autoAlpha: 0, 
+// 		ease: Power4.easeInOut, 
+// 		onComplete: function() {
+// 		  // Hide both loader and overlay once the animation completes
+// 		  $('.site-loader-wrap, #unslate_co--overlayer').hide();
+// 		}
+// 	  });
+// 	});
+//   };
   
 
 var siteMenuClone = function() {
@@ -692,3 +692,25 @@ var animateReveal = function() {
 
 }
 
+// hide-loader logic (covers both normal load & bfcache restores)
+function hideLoader() {
+	TweenMax.to('.site-loader-wrap', 1, {
+	  marginTop: 50,
+	  autoAlpha: 0,
+	  ease: Power4.easeInOut,
+	  onComplete() {
+		$('.site-loader-wrap, #unslate_co--overlayer').hide();
+	  }
+	});
+  }
+  
+  // when the page first loads
+  window.addEventListener('load', hideLoader);
+  
+  // when restored from back/forward cache
+  window.addEventListener('pageshow', (event) => {
+	if (event.persisted) {
+	  hideLoader();
+	}
+  });
+  
