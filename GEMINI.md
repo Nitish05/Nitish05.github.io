@@ -1,6 +1,6 @@
 # Project Overview
 
-This is a personal portfolio website for Nitish R. Raveendran, a Robotics and Software Engineer. It is a static, single-page website built with HTML, CSS, and JavaScript. The website showcases his skills, projects, experience, and contact information.
+This is a personal portfolio website for Nitish R. Raveendran, a Robotics and Software Engineer. It is a static, single-page website built with HTML, CSS, and JavaScript. The website showcases his skills, projects, experience, and contact information. The portfolio is divided into the following sections: About Me, Projects, Expertise, Skills, Experience, and Contact.
 
 The website has a modern, dark-themed design with a focus on typography and whitespace. It uses various JavaScript libraries for animations and effects, including:
 
@@ -23,4 +23,4 @@ The project follows standard web development practices. The code is well-structu
 *   **CSS:** The CSS is organized into a single `style.css` file. It uses a combination of classes and IDs for styling.
 *   **JavaScript:** The JavaScript code is also organized and placed in the `js` directory. It uses jQuery for DOM manipulation and event handling.
 
-The website uses a template from Colorlib. The copyright information for the template is included in the `readme.txt` file and in the footer of the website.
+The website uses a template from Colorlib. The copyright information for the template is included in the footer of the website.
