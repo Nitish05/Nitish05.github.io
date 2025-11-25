@@ -8,7 +8,7 @@ AOS.init({
 jQuery(function($) {
 	
 	'use strict';
-	// loader();
+
 	siteMenuClone();
 	mobileToggleClick();
 	onePageNavigation();
@@ -691,26 +691,3 @@ var animateReveal = function() {
 	}
 
 }
-
-// hide-loader logic (covers both normal load & bfcache restores)
-function hideLoader() {
-	TweenMax.to('.site-loader-wrap', 1, {
-	  marginTop: 50,
-	  autoAlpha: 0,
-	  ease: Power4.easeInOut,
-	  onComplete() {
-		$('.site-loader-wrap, #unslate_co--overlayer').hide();
-	  }
-	});
-  }
-  
-  // when the page first loads
-  window.addEventListener('load', hideLoader);
-  
-  // when restored from back/forward cache
-  window.addEventListener('pageshow', (event) => {
-	if (event.persisted) {
-	  hideLoader();
-	}
-  });
-  
