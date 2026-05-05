@@ -25,3 +25,8 @@ body {
     text-wrap: balance;
   }
 }
+
+@keyframes swipe {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}

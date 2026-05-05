@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   gsap,
   ScrollTrigger,
@@ -17,8 +18,20 @@ import clsx from "clsx";
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const cardRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const router = useRouter();
+  const [hasHover, setHasHover] = useState(true);
+  const [hasPlayed, setHasPlayed] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const update = () => setHasHover(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const onEnter = () => {
+    if (!hasHover) return;
     if (prefersReducedMotion()) return;
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
@@ -26,22 +39,48 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     }
   };
   const onLeave = () => {
+    if (!hasHover) return;
     if (videoRef.current) {
       videoRef.current.pause();
     }
   };
 
+  const onTap = (e: React.MouseEvent<HTMLElement>) => {
+    if (hasHover) return;
+    // Inner links (Deep dive, GitHub) keep their single-tap behavior.
+    if ((e.target as HTMLElement).closest("a")) return;
+    e.preventDefault();
+    if (!hasPlayed) {
+      void videoRef.current?.play().catch(() => {});
+      setHasPlayed(true);
+      return;
+    }
+    router.push(`/work/${project.slug}`);
+  };
+
   const isAmber = project.accent === "amber";
+  const tapMode = !hasHover;
 
   return (
     <article
       ref={cardRef as React.RefObject<HTMLElement>}
       data-project-card
+      data-played={hasPlayed ? "true" : "false"}
       onPointerEnter={onEnter}
       onPointerLeave={onLeave}
+      onClick={onTap}
+      role={tapMode ? "button" : undefined}
+      aria-label={
+        tapMode
+          ? hasPlayed
+            ? `Open ${project.title}`
+            : `Play preview for ${project.title}`
+          : undefined
+      }
       className={clsx(
         "relative flex h-screen w-screen flex-shrink-0 flex-col justify-end p-10 sm:p-16",
         "lg:w-[80vw] lg:max-w-[1100px] lg:px-12",
+        tapMode && "cursor-pointer",
         isAmber ? "bg-bone text-ink" : "bg-ink text-bone"
       )}
     >
@@ -88,7 +127,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           {project.video && (
             <video
               ref={videoRef}
-              className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100 [article:hover_&]:opacity-100"
+              className={clsx(
+                "absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100 [article:hover_&]:opacity-100",
+                hasPlayed && "opacity-100"
+              )}
               src={project.video}
               muted
               loop
@@ -97,6 +139,19 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             />
           )}
         </div>
+      )}
+
+      {/* Tap-again hint (mobile, after first tap) */}
+      {tapMode && hasPlayed && (
+        <span
+          className={clsx(
+            "mb-3 inline-flex w-fit items-center gap-2 border px-2 py-1 font-mono text-[10px] uppercase tracking-wider2",
+            isAmber ? "border-amber/40 text-amber" : "border-cyan/40 text-cyan"
+          )}
+        >
+          Tap again to open
+          <span aria-hidden>→</span>
+        </span>
       )}
 
       {/* Title block */}
@@ -222,6 +277,20 @@ export default function Projects() {
         <span className="h-px w-12 bg-ink/20" />
         <span>Projects</span>
         <span className="ml-3 text-ink/30">{PROJECTS.length} entries</span>
+      </div>
+
+      {/* Mobile swipe affordance — bottom-center, mobile only.
+          mix-blend-difference inverts against either bone or ink card backgrounds. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute bottom-6 left-1/2 z-[3] flex -translate-x-1/2 items-center gap-2 font-mono text-[10px] uppercase tracking-wider2 text-bone mix-blend-difference lg:hidden"
+      >
+        <span className="h-px w-6 bg-current opacity-50" />
+        Swipe
+        <span className="inline-block motion-safe:animate-[swipe_1.6s_ease-in-out_infinite]">
+          →
+        </span>
+        <span className="h-px w-6 bg-current opacity-50" />
       </div>
 
       {/* Horizontal track */}
