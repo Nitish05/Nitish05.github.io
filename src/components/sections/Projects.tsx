@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   gsap,
   ScrollTrigger,
@@ -15,48 +14,20 @@ import { CHAPTERS } from "@/lib/chapters";
 import { PROJECTS, type Project } from "@/lib/projects";
 import clsx from "clsx";
 
-const isTouchOnly = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(hover: none)").matches;
-
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const cardRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const router = useRouter();
 
-  // Hover devices: pointer enter plays the video. Touch-only: skip — taps
-  // run through onMediaTap below for the two-step play -> navigate UX.
   const onEnter = () => {
     if (prefersReducedMotion()) return;
-    if (isTouchOnly()) return;
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
       void videoRef.current.play().catch(() => {});
     }
   };
   const onLeave = () => {
-    if (isTouchOnly()) return;
     if (videoRef.current) {
       videoRef.current.pause();
-    }
-  };
-
-  // Touch-only: first tap on the media plays the video, a subsequent tap
-  // (while the video is playing) navigates to the deep-dive route. Mirrors
-  // Leclerc's hover-to-click swap pattern for touch devices.
-  const onMediaTap = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isTouchOnly()) return;
-    if (!videoRef.current) {
-      router.push(`/work/${project.slug}`);
-      return;
-    }
-    if (videoRef.current.paused) {
-      e.preventDefault();
-      e.stopPropagation();
-      videoRef.current.currentTime = 0;
-      void videoRef.current.play().catch(() => {});
-    } else {
-      router.push(`/work/${project.slug}`);
     }
   };
 
@@ -99,14 +70,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <span>{project.year}</span>
       </div>
 
-      {/* Media preview — clickable on touch devices for tap-to-play UX */}
+      {/* Media preview */}
       {project.poster && (
         <div
-          onClick={onMediaTap}
           className={clsx(
             "relative mb-8 aspect-video w-full overflow-hidden lg:max-w-[560px]",
-            isAmber ? "bg-ink/5" : "bg-bone/5",
-            project.video && "lg:cursor-default cursor-pointer"
+            isAmber ? "bg-ink/5" : "bg-bone/5"
           )}
         >
           <Image
@@ -119,28 +88,13 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           {project.video && (
             <video
               ref={videoRef}
-              className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 [article:hover_&]:opacity-100 [&:not([paused])]:opacity-100"
+              className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100 [article:hover_&]:opacity-100"
               src={project.video}
               muted
               loop
               playsInline
               preload="metadata"
             />
-          )}
-          {/* Tap-to-play hint, mobile only */}
-          {project.video && (
-            <span
-              aria-hidden
-              className={clsx(
-                "absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[9px] uppercase tracking-wider2 backdrop-blur-sm lg:hidden",
-                isAmber
-                  ? "bg-ink/55 text-bone"
-                  : "bg-bone/15 text-bone"
-              )}
-            >
-              <span className="block h-1.5 w-1.5 rounded-full bg-amber" />
-              Tap to play
-            </span>
           )}
         </div>
       )}
@@ -268,18 +222,6 @@ export default function Projects() {
         <span className="h-px w-12 bg-ink/20" />
         <span>Projects</span>
         <span className="ml-3 text-ink/30">{PROJECTS.length} entries</span>
-      </div>
-
-      {/* Mobile-only swipe cue, mirrors Leclerc's "Swipe right" affordance */}
-      <div className="pointer-events-none absolute right-6 top-6 z-[2] flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider2 text-ink/55 sm:right-10 sm:top-10 lg:hidden">
-        <span>Swipe</span>
-        <span
-          aria-hidden
-          className="inline-block text-amber"
-          style={{ animation: "swipeCue 1.8s ease-in-out infinite" }}
-        >
-          →
-        </span>
       </div>
 
       {/* Horizontal track */}

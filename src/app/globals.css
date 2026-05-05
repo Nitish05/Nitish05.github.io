@@ -3,83 +3,25 @@
 @tailwind utilities;
 
 :root {
-  --bone: #F4F1EC;
-  --ink: #0E0E0E;
-  --amber: #FFB627;
-  --cyan: #7FE7DC;
-  --ash: #9A9A92;
+  --background: #ffffff;
+  --foreground: #171717;
 }
 
-html,
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
 body {
-  background: var(--bone);
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: clip;
-}
-
-::selection {
-  background: var(--amber);
-  color: var(--ink);
-}
-
-/* Hide native cursor when custom cursor is active (desktop only) */
-@media (hover: hover) and (pointer: fine) {
-  html.has-custom-cursor,
-  html.has-custom-cursor * {
-    cursor: none !important;
-  }
-}
-
-/* Reduced motion safety */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Reusable mask for clip-path text reveals */
-.line-mask {
-  overflow: hidden;
-  display: block;
-}
-
-.line-inner {
-  display: inline-block;
-  will-change: transform;
-}
-
-/* Subtle horizontal pulse for the mobile swipe cue arrow */
-@keyframes swipeCue {
-  0%,
-  100% {
-    transform: translateX(0);
-    opacity: 0.55;
-  }
-  50% {
-    transform: translateX(8px);
-    opacity: 1;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
 }
