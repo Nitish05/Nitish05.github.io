@@ -62,7 +62,7 @@ export default function Hero() {
           trigger: section,
           start: "top top",
           end: "+=120%",
-          scrub: 1,
+          scrub: true,
           pin: true,
           pinSpacing: true,
           anticipatePin: 1,
@@ -70,23 +70,21 @@ export default function Hero() {
       });
 
       pinTl
-        .to(
+        .fromTo(
           chars,
+          { x: 0, y: 0 },
           {
-            // Drift letters apart along alternating axes — they STAY VISIBLE
-            // (per spec: "letters split and drift apart"). We do not fade
-            // them out; that would also leave them invisible on scroll-back
-            // if the pin/unpin state machine drops a frame.
             x: (i: number) => (i % 2 === 0 ? -40 - i * 4 : 40 + i * 4),
             y: (i: number) => (i % 3 === 0 ? -20 : 14),
             ease: "none",
+            immediateRender: false,
           },
           0
         )
-        .to(subline, { autoAlpha: 0, y: -30, ease: "none" }, 0)
-        .to(cue, { autoAlpha: 0, y: 12, ease: "none" }, 0)
-        .to(video, { filter: "saturate(0) brightness(0.45)", ease: "none" }, 0)
-        .to(overlay, { opacity: 0.85, ease: "none" }, 0);
+        .fromTo(subline, { y: 0, autoAlpha: 1 }, { autoAlpha: 0, y: -30, ease: "none", immediateRender: false }, 0)
+        .fromTo(cue, { y: 0, autoAlpha: 1 }, { autoAlpha: 0, y: 12, ease: "none", immediateRender: false }, 0)
+        .fromTo(video, { filter: "saturate(1) brightness(1)" }, { filter: "saturate(0) brightness(0.45)", ease: "none", immediateRender: false }, 0)
+        .fromTo(overlay, { opacity: 0.90 }, { opacity: 1, ease: "none", immediateRender: false }, 0);
 
       // Belt-and-suspenders: when the user scrolls back above the hero
       // (section's top crosses the viewport top going up), force the
@@ -162,8 +160,8 @@ export default function Hero() {
       </div>
       <div
         data-hero-overlay
-        className="absolute inset-0 bg-gradient-to-b from-ink/30 via-ink/10 to-ink/70"
-        style={{ opacity: 0.55 }}
+        className="absolute inset-0 bg-gradient-to-b from-ink/80 via-ink/60 to-ink/95"
+        style={{ opacity: 0.90 }}
       />
 
       {/* Centered headline */}

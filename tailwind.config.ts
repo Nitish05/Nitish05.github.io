@@ -12,7 +12,7 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         ink: "#0E0E0E",
-        bone: "#F0F0F0",
+        bone: "#D4D0CB",
         amber: "#D4A843",
         cyan: "#888888",
         ash: "#555555",
