@@ -245,38 +245,47 @@ export default function Projects() {
   useGSAP(
     () => {
       registerGsap();
-
       if (prefersReducedMotion()) return;
-      // Pin only on lg+ — mobile uses native horizontal scroll-snap
-      if (typeof window === "undefined" || window.innerWidth < 1024) return;
 
       const section = sectionRef.current!;
       const track = trackRef.current!;
 
-      const getDistance = () =>
-        Math.max(0, track.scrollWidth - window.innerWidth);
+      // matchMedia auto-rebuilds when the user resizes across the 1024px
+      // boundary. Below 1024px the native max-lg:overflow-x-auto + snap-x
+      // takes over; above, GSAP pins and translates the track.
+      const mm = gsap.matchMedia();
 
-      const tween = gsap.to(track, {
-        x: () => -getDistance(),
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          pin: true,
-          start: "top top",
-          end: () => "+=" + getDistance(),
-          scrub: 1,
-          invalidateOnRefresh: true,
-          anticipatePin: 1,
-        },
+      mm.add("(min-width: 1024px)", () => {
+        const getDistance = () =>
+          Math.max(0, track.scrollWidth - window.innerWidth);
+
+        const tween = gsap.to(track, {
+          x: () => -getDistance(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            pin: true,
+            start: "top top",
+            end: () => "+=" + getDistance(),
+            scrub: 1,
+            invalidateOnRefresh: true,
+            anticipatePin: 1,
+          },
+        });
+
+        void document.fonts?.ready.then(() => ScrollTrigger.refresh());
+
+        // Cleanup runs when leaving the media query (resize down) or unmount.
+        return () => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+          // Reset any inline transform left on the track so the native
+          // mobile scroll-snap layout starts from x=0.
+          gsap.set(track, { clearProps: "transform" });
+        };
       });
 
-      // Refresh on font load to avoid measurement drift
-      void document.fonts?.ready.then(() => ScrollTrigger.refresh());
-
-      return () => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
-      };
+      return () => mm.revert();
     },
     { scope: sectionRef }
   );
