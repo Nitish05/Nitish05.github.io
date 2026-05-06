@@ -129,12 +129,12 @@ export default function PullQuote() {
         <span
           aria-hidden
           data-quote-meta
-          className="block font-display text-[clamp(4rem,9vw,8rem)] leading-none text-amber"
+          className="block font-display text-[clamp(3rem,7vw,6rem)] leading-none text-amber"
         >
           &ldquo;
         </span>
 
-        <blockquote className="mt-6 max-w-[1300px] font-display text-[clamp(2.5rem,8vw,8rem)] uppercase leading-[0.92]">
+        <blockquote className="mt-6 max-w-[1300px] font-display text-[clamp(2rem,6vw,6rem)] uppercase leading-[0.92]">
           {QUOTE_LINES.map((line, i) => (
             <span
               key={i}

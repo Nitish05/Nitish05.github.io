@@ -127,7 +127,7 @@ export default function Stats() {
                 )}
                 <span
                   data-stat-value
-                  className="font-display text-[clamp(3rem,7vw,5.5rem)] leading-none text-bone tabular-nums"
+                  className="font-display text-[clamp(2.2rem,5.5vw,4.5rem)] leading-none text-bone tabular-nums"
                 >
                   0
                 </span>

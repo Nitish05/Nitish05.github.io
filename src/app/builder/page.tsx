@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function BuilderPage() {
   return (
-    <main className="relative min-h-screen w-full bg-bone text-ink">
+    <main id="main-content" className="relative min-h-screen w-full bg-bone text-ink">
       <section className="px-6 pb-32 pt-32 sm:px-10 lg:px-16 lg:pt-44">
         <div className="mx-auto max-w-[1400px]">
           <div className="mb-12 flex items-baseline gap-4 lg:mb-20">

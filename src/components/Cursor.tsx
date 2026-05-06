@@ -39,9 +39,8 @@ export default function Cursor() {
       gsap.to(dot, { opacity: 0, duration: 0.2 });
     };
 
-    const onEnterLink = (e: Event) => {
-      const t = e.currentTarget as HTMLElement;
-      const label = t.dataset.cursor;
+    const onEnterLink = (target: HTMLElement) => {
+      const label = target.dataset.cursor;
       gsap.to(dot, { scale: 4, duration: 0.3, ease: "power3.out" });
       if (label && labelRef.current) {
         labelRef.current.textContent = label;
@@ -59,19 +58,35 @@ export default function Cursor() {
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerleave", onLeave);
 
-    const targets = document.querySelectorAll<HTMLElement>("a, button, [data-cursor]");
-    targets.forEach((el) => {
-      el.addEventListener("pointerenter", onEnterLink);
-      el.addEventListener("pointerleave", onLeaveLink);
-    });
+    let activeTarget: HTMLElement | null = null;
+    const findTarget = (target: EventTarget | null) =>
+      target instanceof HTMLElement
+        ? target.closest<HTMLElement>("a, button, [data-cursor]")
+        : null;
+
+    const onPointerOver = (e: PointerEvent) => {
+      const target = findTarget(e.target);
+      if (!target || target === activeTarget) return;
+      activeTarget = target;
+      onEnterLink(target);
+    };
+
+    const onPointerOut = (e: PointerEvent) => {
+      if (!activeTarget) return;
+      const nextTarget = findTarget(e.relatedTarget);
+      if (nextTarget === activeTarget) return;
+      activeTarget = null;
+      onLeaveLink();
+    };
+
+    document.addEventListener("pointerover", onPointerOver);
+    document.addEventListener("pointerout", onPointerOut);
 
     return () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
-      targets.forEach((el) => {
-        el.removeEventListener("pointerenter", onEnterLink);
-        el.removeEventListener("pointerleave", onLeaveLink);
-      });
+      document.removeEventListener("pointerover", onPointerOver);
+      document.removeEventListener("pointerout", onPointerOut);
       document.documentElement.classList.remove("has-custom-cursor");
     };
   }, []);

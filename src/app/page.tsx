@@ -12,7 +12,7 @@ const PROJECTS_MARQUEE_TEXT =
 
 export default function Home() {
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       <Hero />
       <Intro />
       <Stats />

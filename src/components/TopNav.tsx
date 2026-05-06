@@ -20,12 +20,13 @@ export default function TopNav() {
           NRR<span className="text-amber">/</span>ROBOTICS
         </Link>
 
-        <nav className="flex items-center gap-3 text-bone">
+        <nav className="flex items-center gap-1.5 text-bone sm:gap-3">
           <Link
             href="/"
             data-cursor="ENGINEER"
             className={clsx(
-              "font-mono text-xs uppercase tracking-wider2 transition-colors duration-300",
+              "font-mono uppercase transition-colors duration-300",
+              "text-[9px] tracking-[0.1em] sm:text-xs sm:tracking-wider2",
               !onBuilder ? "text-amber" : "text-bone hover:text-amber"
             )}
           >
@@ -36,7 +37,8 @@ export default function TopNav() {
             href="/builder"
             data-cursor="BUILDER"
             className={clsx(
-              "font-mono text-xs uppercase tracking-wider2 transition-colors duration-300",
+              "font-mono uppercase transition-colors duration-300",
+              "text-[9px] tracking-[0.1em] sm:text-xs sm:tracking-wider2",
               onBuilder ? "text-amber" : "text-bone hover:text-amber"
             )}
           >

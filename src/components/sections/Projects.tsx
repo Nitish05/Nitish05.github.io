@@ -49,13 +49,28 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     if (hasHover) return;
     // Inner links (Deep dive, GitHub) keep their single-tap behavior.
     if ((e.target as HTMLElement).closest("a")) return;
-    e.preventDefault();
+    openOrPreview();
+  };
+
+  const openOrPreview = () => {
+    if (!project.video) {
+      router.push(`/work/${project.slug}`);
+      return;
+    }
     if (!hasPlayed) {
       void videoRef.current?.play().catch(() => {});
       setHasPlayed(true);
       return;
     }
     router.push(`/work/${project.slug}`);
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (!tapMode) return;
+    if ((e.target as HTMLElement).closest("a")) return;
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
+    openOrPreview();
   };
 
   const isAmber = project.accent === "amber";
@@ -69,7 +84,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       onPointerEnter={onEnter}
       onPointerLeave={onLeave}
       onClick={onTap}
+      onKeyDown={onKeyDown}
       role={tapMode ? "button" : undefined}
+      tabIndex={tapMode ? 0 : undefined}
       aria-label={
         tapMode
           ? hasPlayed
@@ -81,7 +98,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         "relative flex h-screen w-screen flex-shrink-0 flex-col justify-end p-10 sm:p-16",
         "lg:w-[80vw] lg:max-w-[1100px] lg:px-12",
         tapMode && "cursor-pointer",
-        isAmber ? "bg-bone text-ink" : "bg-ink text-bone"
+        isAmber ? "bg-[#171717] text-bone" : "bg-ink text-bone"
       )}
     >
       {/* Watermark project number */}
@@ -99,7 +116,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       <div
         className={clsx(
           "absolute left-10 top-10 z-[1] flex items-center gap-3 font-mono text-[10px] uppercase tracking-wider2 sm:left-16 sm:top-16 lg:left-12",
-          isAmber ? "text-ink/55" : "text-bone/55"
+          isAmber ? "text-bone/55" : "text-bone/55"
         )}
       >
         <span className={isAmber ? "text-amber" : "text-cyan"}>
@@ -114,7 +131,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <div
           className={clsx(
             "relative mb-8 aspect-video w-full overflow-hidden lg:max-w-[560px]",
-            isAmber ? "bg-ink/5" : "bg-bone/5"
+            isAmber ? "bg-bone/5" : "bg-bone/5"
           )}
         >
           <Image
@@ -161,7 +178,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       <p
         className={clsx(
           "mt-4 max-w-xl font-sans text-base sm:text-lg",
-          isAmber ? "text-ink/70" : "text-bone/70"
+          isAmber ? "text-bone/70" : "text-bone/70"
         )}
       >
         {project.tagline}
@@ -175,7 +192,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             className={clsx(
               "border px-3 py-1 font-mono text-[10px] uppercase tracking-wider2",
               isAmber
-                ? "border-ink/15 text-ink/70"
+                ? "border-amber/20 text-bone/70"
                 : "border-bone/15 text-bone/70"
             )}
           >
@@ -191,7 +208,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           data-cursor="OPEN"
           className={clsx(
             "group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider2",
-            isAmber ? "text-ink hover:text-amber" : "text-bone hover:text-amber"
+            isAmber ? "text-bone hover:text-amber" : "text-bone hover:text-amber"
           )}
         >
           <span>Deep dive</span>
@@ -207,7 +224,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             data-cursor="GITHUB"
             className={clsx(
               "group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider2",
-              isAmber ? "text-ink/60 hover:text-ink" : "text-bone/60 hover:text-bone"
+              isAmber ? "text-bone/60 hover:text-bone" : "text-bone/60 hover:text-bone"
             )}
           >
             <span>GitHub</span>
@@ -268,15 +285,15 @@ export default function Projects() {
     <section
       id={CHAPTERS[3].id}
       ref={sectionRef as React.RefObject<HTMLElement>}
-      className="relative w-full overflow-hidden bg-bone"
+      className="relative w-full overflow-hidden bg-ink"
       aria-label="Projects"
     >
       {/* Sticky chapter label across the pin */}
-      <div className="pointer-events-none absolute left-6 top-6 z-[2] flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-wider2 text-ink/60 sm:left-10 sm:top-10">
+      <div className="pointer-events-none absolute left-6 top-6 z-[2] flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-wider2 text-bone/60 sm:left-10 sm:top-10">
         <span className="text-amber">03</span>
-        <span className="h-px w-12 bg-ink/20" />
+        <span className="h-px w-12 bg-bone/20" />
         <span>Projects</span>
-        <span className="ml-3 text-ink/30">{PROJECTS.length} entries</span>
+        <span className="ml-3 text-bone/30">{PROJECTS.length} entries</span>
       </div>
 
       {/* Mobile swipe affordance — bottom-center, mobile only.

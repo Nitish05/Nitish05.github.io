@@ -6,13 +6,15 @@ import { PROJECTS } from "@/lib/projects";
 import RevealLines from "@/components/RevealLines";
 
 type Params = { slug: string };
+type PageProps = { params: Promise<Params> };
 
 export function generateStaticParams() {
   return PROJECTS.map((p) => ({ slug: p.slug }));
 }
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
-  const project = PROJECTS.find((p) => p.slug === params.slug);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const project = PROJECTS.find((p) => p.slug === slug);
   if (!project) return { title: "Not found" };
   return {
     title: `${project.title} — Nitish R. Raveendran`,
@@ -22,8 +24,9 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
 
 const PANELS = ["Problem", "Approach", "Hardware", "Result"] as const;
 
-export default function WorkPage({ params }: { params: Params }) {
-  const project = PROJECTS.find((p) => p.slug === params.slug);
+export default async function WorkPage({ params }: PageProps) {
+  const { slug } = await params;
+  const project = PROJECTS.find((p) => p.slug === slug);
   if (!project) notFound();
 
   const isAmber = project.accent === "amber";
@@ -45,14 +48,14 @@ export default function WorkPage({ params }: { params: Params }) {
   };
 
   return (
-    <main className="relative bg-bone text-ink">
+    <main id="main-content" className="relative bg-ink text-bone">
       {/* Header */}
       <header className="px-6 pb-12 pt-32 sm:px-10 lg:px-16">
         <div className="mx-auto max-w-[1400px]">
           <Link
             href="/#projects"
             data-cursor="BACK"
-            className="font-mono text-[11px] uppercase tracking-wider2 text-ink/60 hover:text-ink"
+            className="font-mono text-[11px] uppercase tracking-wider2 text-bone/60 hover:text-bone"
           >
             ← Back to projects
           </Link>
@@ -61,8 +64,8 @@ export default function WorkPage({ params }: { params: Params }) {
             <span className="font-mono text-[11px] uppercase tracking-wider2 text-amber">
               {String(idx).padStart(3, "0")}
             </span>
-            <span className="h-px flex-1 max-w-[120px] bg-ink/20" />
-            <span className="font-mono text-[11px] uppercase tracking-wider2 text-ink/50">
+            <span className="h-px flex-1 max-w-[120px] bg-bone/20" />
+            <span className="font-mono text-[11px] uppercase tracking-wider2 text-bone/50">
               {project.year}
             </span>
           </div>
@@ -70,7 +73,7 @@ export default function WorkPage({ params }: { params: Params }) {
           <h1 className="mt-4 font-display text-display-lg uppercase leading-[0.9]">
             {project.title}
           </h1>
-          <p className="mt-6 max-w-2xl font-sans text-lg text-ink/75 sm:text-xl">
+          <p className="mt-6 max-w-2xl font-sans text-lg text-bone/75 sm:text-xl">
             {project.tagline}
           </p>
 
@@ -78,7 +81,7 @@ export default function WorkPage({ params }: { params: Params }) {
             {project.stack.map((s) => (
               <li
                 key={s}
-                className="border border-ink/15 px-3 py-1 font-mono text-[10px] uppercase tracking-wider2 text-ink/70"
+                className="border border-bone/15 px-3 py-1 font-mono text-[10px] uppercase tracking-wider2 text-bone/70"
               >
                 {s}
               </li>
@@ -91,7 +94,7 @@ export default function WorkPage({ params }: { params: Params }) {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="GITHUB"
-              className="mt-8 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider2 text-ink hover:text-amber"
+              className="mt-8 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider2 text-bone hover:text-amber"
             >
               <span>View on GitHub</span>
               <span aria-hidden>↗</span>
@@ -104,9 +107,7 @@ export default function WorkPage({ params }: { params: Params }) {
       {project.poster && (
         <div className="relative mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-16">
           <div
-            className={`relative aspect-video w-full overflow-hidden ${
-              isAmber ? "bg-ink/5" : "bg-bone/10"
-            }`}
+            className="relative aspect-video w-full overflow-hidden bg-bone/5"
           >
             <Image
               src={project.poster}
@@ -133,13 +134,13 @@ export default function WorkPage({ params }: { params: Params }) {
 
       {/* Panels — vertical stack for now; horizontal "Change view" sub-scroll comes later */}
       <section className="px-6 py-32 sm:px-10 lg:px-16 lg:py-40">
-        <div className="mx-auto max-w-[1400px] grid grid-cols-1 gap-px bg-ink/10 lg:grid-cols-2">
+        <div className="mx-auto max-w-[1400px] grid grid-cols-1 gap-px bg-bone/10 lg:grid-cols-2">
           {PANELS.map((label, i) => (
             <article
               key={label}
-              className="bg-bone p-10 sm:p-14"
+              className="bg-[#171717] p-10 sm:p-14"
             >
-              <div className="flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-wider2 text-ink/55">
+              <div className="flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-wider2 text-bone/55">
                 <span className="text-amber">{String(i + 1).padStart(2, "0")}</span>
                 <span>/ {label}</span>
               </div>
@@ -149,7 +150,7 @@ export default function WorkPage({ params }: { params: Params }) {
               <RevealLines
                 as="p"
                 lines={[panelText(label)]}
-                className="mt-8 max-w-xl text-lg leading-relaxed text-ink/80"
+                className="mt-8 max-w-xl text-lg leading-relaxed text-bone/80"
                 lineClassName="block"
                 stagger={0.04}
                 start="top 85%"
@@ -160,13 +161,13 @@ export default function WorkPage({ params }: { params: Params }) {
       </section>
 
       {/* Prev / Next */}
-      <nav className="mx-auto flex max-w-[1400px] items-stretch gap-px bg-ink/10 px-6 pb-32 sm:px-10 lg:px-16">
+      <nav className="mx-auto flex max-w-[1400px] items-stretch gap-px bg-bone/10 px-6 pb-32 sm:px-10 lg:px-16">
         <Link
           href={`/work/${prev.slug}`}
           data-cursor="PREV"
-          className="group flex-1 bg-bone p-10 transition-colors hover:bg-ink hover:text-bone"
+          className="group flex-1 bg-[#171717] p-10 transition-colors hover:bg-[#1e1e1e] hover:text-bone"
         >
-          <span className="font-mono text-[10px] uppercase tracking-wider2 opacity-60">
+          <span className="font-mono text-[10px] uppercase tracking-wider2 text-bone/60">
             ← Previous
           </span>
           <p className="mt-3 font-display text-2xl uppercase">{prev.title}</p>
@@ -174,9 +175,9 @@ export default function WorkPage({ params }: { params: Params }) {
         <Link
           href={`/work/${next.slug}`}
           data-cursor="NEXT"
-          className="group flex-1 bg-bone p-10 text-right transition-colors hover:bg-ink hover:text-bone"
+          className="group flex-1 bg-[#171717] p-10 text-right transition-colors hover:bg-[#1e1e1e] hover:text-bone"
         >
-          <span className="font-mono text-[10px] uppercase tracking-wider2 opacity-60">
+          <span className="font-mono text-[10px] uppercase tracking-wider2 text-bone/60">
             Next →
           </span>
           <p className="mt-3 font-display text-2xl uppercase">{next.title}</p>

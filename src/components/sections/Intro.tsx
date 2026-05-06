@@ -134,7 +134,7 @@ export default function Intro() {
             <RevealLines
               as="p"
               lines={INTRO_LINES}
-              className="font-display text-display-md uppercase leading-[0.95] text-bone"
+              className="font-display text-display-sm uppercase leading-[1.1] text-bone"
               lineClassName="block"
               stagger={0.05}
             />

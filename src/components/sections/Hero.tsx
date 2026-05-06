@@ -168,7 +168,7 @@ export default function Hero() {
 
       {/* Centered headline */}
       <div className="relative z-10 mx-auto flex h-full max-w-[1600px] flex-col items-center justify-center px-6 text-center">
-        <h1 className="font-display text-display-xl uppercase leading-[0.85]">
+        <h1 className="font-display text-[3.5vw] lg:text-[4vw] uppercase leading-[0.85]">
           <span className="block overflow-hidden">{splitChars(NAME_LINE_1)}</span>
           <span className="block overflow-hidden">{splitChars(NAME_LINE_2)}</span>
           <span className="block overflow-hidden">{splitChars(NAME_LINE_3)}</span>
