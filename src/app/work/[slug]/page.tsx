@@ -50,7 +50,7 @@ export default async function WorkPage({ params }: PageProps) {
   return (
     <main id="main-content" className="relative bg-ink text-bone">
       {/* Header */}
-      <header className="px-6 pb-12 pt-32 sm:px-10 lg:px-16">
+      <header className="px-8 pb-12 pt-32 sm:px-12 lg:px-24 xl:px-32">
         <div className="mx-auto max-w-[1400px]">
           <Link
             href="/#projects"
@@ -105,7 +105,7 @@ export default async function WorkPage({ params }: PageProps) {
 
       {/* Hero media */}
       {project.poster && (
-        <div className="relative mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-16">
+        <div className="relative mx-auto max-w-[1400px] px-8 sm:px-12 lg:px-24 xl:px-32">
           <div
             className="relative aspect-video w-full overflow-hidden bg-bone/5"
           >
@@ -133,7 +133,7 @@ export default async function WorkPage({ params }: PageProps) {
       )}
 
       {/* Panels — vertical stack for now; horizontal "Change view" sub-scroll comes later */}
-      <section className="px-6 py-32 sm:px-10 lg:px-16 lg:py-40">
+      <section className="px-8 py-32 sm:px-12 lg:px-24 lg:py-40 xl:px-32">
         <div className="mx-auto max-w-[1400px] grid grid-cols-1 gap-px bg-bone/10 lg:grid-cols-2">
           {PANELS.map((label, i) => (
             <article
@@ -161,7 +161,7 @@ export default async function WorkPage({ params }: PageProps) {
       </section>
 
       {/* Prev / Next */}
-      <nav className="mx-auto flex max-w-[1400px] items-stretch gap-px bg-bone/10 px-6 pb-32 sm:px-10 lg:px-16">
+      <nav className="mx-auto flex max-w-[1400px] items-stretch gap-px bg-bone/10 px-8 pb-32 sm:px-12 lg:px-24 xl:px-32">
         <Link
           href={`/work/${prev.slug}`}
           data-cursor="PREV"
