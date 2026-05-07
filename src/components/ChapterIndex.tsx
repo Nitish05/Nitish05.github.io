@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { gsap, ScrollTrigger, registerGsap, prefersReducedMotion } from "@/lib/gsap";
 import { CHAPTERS } from "@/lib/chapters";
 import clsx from "clsx";
@@ -8,8 +9,12 @@ import clsx from "clsx";
 export default function ChapterIndex() {
   const [active, setActive] = useState(0);
   const containerRef = useRef<HTMLElement | null>(null);
+  const pathname = usePathname();
+  const isWorkPage = pathname?.startsWith("/work/");
 
   useEffect(() => {
+    if (isWorkPage) return;
+
     registerGsap();
 
     const triggers: ScrollTrigger[] = [];
@@ -35,7 +40,9 @@ export default function ChapterIndex() {
       window.clearTimeout(id);
       triggers.forEach((t) => t.kill());
     };
-  }, []);
+  }, [isWorkPage]);
+
+  if (isWorkPage) return null;
 
   const jumpTo = (chapterId: string) => {
     const el = document.getElementById(chapterId);

@@ -33,6 +33,7 @@ export default function Hero() {
       const video = section.querySelector("[data-hero-video]") as HTMLElement | null;
       const overlay = section.querySelector("[data-hero-overlay]") as HTMLElement | null;
       const chars = section.querySelectorAll<HTMLElement>("[data-char]");
+      const nameLines = section.querySelectorAll<HTMLElement>("[data-name-line]");
       const subline = section.querySelector("[data-hero-sub]") as HTMLElement | null;
       const cue = section.querySelector("[data-hero-cue]") as HTMLElement | null;
       const indicator = section.querySelector("[data-hero-indicator]") as HTMLElement | null;
@@ -54,7 +55,8 @@ export default function Hero() {
         })
         .to(subline, { yPercent: 0, autoAlpha: 1, duration: 0.8 }, "-=0.55")
         .to(cue, { autoAlpha: 1, y: 0, duration: 0.6 }, "-=0.4")
-        .to(indicator, { autoAlpha: 1, x: 0, duration: 0.6 }, "<");
+        .to(indicator, { autoAlpha: 1, x: 0, duration: 0.6 }, "<")
+        .set(nameLines, { overflow: "visible" });
 
       // Pinned hero unlock — 120vh of scroll
       const pinTl = gsap.timeline({
@@ -167,9 +169,9 @@ export default function Hero() {
       {/* Centered headline */}
       <div className="relative z-10 mx-auto flex h-full max-w-[1600px] flex-col items-center justify-center px-6 text-center">
         <h1 className="font-display text-[3.5vw] lg:text-[4vw] uppercase leading-[0.85]">
-          <span className="block overflow-hidden">{splitChars(NAME_LINE_1)}</span>
-          <span className="block overflow-hidden">{splitChars(NAME_LINE_2)}</span>
-          <span className="block overflow-hidden">{splitChars(NAME_LINE_3)}</span>
+          <span data-name-line className="block overflow-hidden">{splitChars(NAME_LINE_1)}</span>
+          <span data-name-line className="block overflow-hidden">{splitChars(NAME_LINE_2)}</span>
+          <span data-name-line className="block overflow-hidden">{splitChars(NAME_LINE_3)}</span>
         </h1>
         <p
           data-hero-sub
